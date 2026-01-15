@@ -1,121 +1,99 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import logo from '../assets/logo.png';
+import { useState, useRef, useEffect } from "react";
+import { gsap } from "gsap";
+import logo from "../assets/logo.png"
 
-const BookNavbar = () => {
-  const navRef = useRef(null);
-  const linkRefs = useRef([]);
-  const mobileLinkRefs = useRef([]);
+const navItems = ["Home", "About", "Categories", "BestSellers", "Contact"];
+
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
-    // stagger fade-in for nav links
-    gsap.fromTo(
-      linkRefs.current,
-      { opacity: 0, y: -20 },
-      { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out' }
-    );
+    if (!menuRef.current) return;
 
-    // subtle underline grow on hover
-    linkRefs.current.forEach((el) => {
-      if (!el) return;
-      const underline = el.querySelector('.underline');
-      if (underline) {
-        el.addEventListener('mouseenter', () =>
-          gsap.to(underline, { scaleX: 1, duration: 0.3, ease: 'power2.out' })
-        );
-        el.addEventListener('mouseleave', () =>
-          gsap.to(underline, { scaleX: 0, duration: 0.3, ease: 'power2.out' })
-        );
-      }
-    });
-  }, []);
-
-  useEffect(() => {
     if (isOpen) {
       gsap.fromTo(
-        mobileLinkRefs.current,
-        { opacity: 0, x: -20 },
-        { opacity: 1, x: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' }
+        menuRef.current,
+        { width: 0, opacity: 0 },
+        {
+          width: "auto",
+          opacity: 1,
+          duration: 0.4,
+          ease: "power3.out",
+        }
       );
+    } else {
+      gsap.to(menuRef.current, {
+        width: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power3.in",
+      });
     }
   }, [isOpen]);
 
-  const navItems = ['Home', 'Categories', 'Bestsellers', 'About', 'Contact'];
-
   return (
     <nav
-      ref={navRef}
-      className="relative z-50 flex items-center justify-between px-4 py-4 shadow-md md:px-8 lg:px-12"
+      className="bg-white shadow-md fixed w-full top-0 z-50 h-20"
+      role="navigation"
+      aria-label="Main Navigation"
     >
-      {/* Brand */}
-      <div className="text-xl font-bold text-indigo-700 md:text-2xl">
-        <img src={logo} alt="logo" className="w-35 h-auto" />
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between h-16 items-center">
+
+          {/* Logo */}
+          <div className="text-xl font-bold text-indigo-600">
+            <img src={logo} alt="logo" className="w-45 h-auto pt-6 px-6"/>
+          </div>
+
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex ml-auto space-x-6">
+            {navItems.map((item) => (
+              <li key={item}>
+                <a
+                  href={`/${item.toLowerCase()}`}
+                  className="px-4 py-2 rounded-full transition-all duration-300
+                             hover:border hover:border-indigo-500
+                             hover:text-indigo-600
+                             focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          {/* Mobile Toggle Button */}
+          <button
+            className="md:hidden ml-auto text-2xl text-gray-700
+                       focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-label="Toggle Menu"
+            aria-expanded={isOpen}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </div>
 
-      {/* Desktop Links */}
-      <ul className="hidden md:flex items-center gap-6">
-        {navItems.map((item, idx) => (
-          <li key={item}>
-            <a
-              href={`/${item.toLowerCase()}`}
-              ref={(r) => (linkRefs.current[idx] = r)}
-              className="relative px-3 py-2 text-gray-700 hover:text-indigo-700 transition-colors duration-300"
-            >
-              {item}
-              <span className="underline absolute left-0 bottom-0 w-full h-0.5 bg-indigo-700 origin-left scale-x-0" />
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      {/* Mobile Toggle */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
-        aria-label="Toggle menu"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          {isOpen ? (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          ) : (
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          )}
-        </svg>
-      </button>
-
-      {/* Mobile Menu */}
+      {/* Mobile Menu (GSAP Animated) */}
       <div
-        className={`absolute top-full left-0 w-full bg-white shadow-lg md:hidden transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-y-0' : '-translate-y-full'
-        }`}
+        ref={menuRef}
+        className="md:hidden overflow-hidden bg-white shadow-lg fixed right-0 top-20 h-auto"
+        style={{ width: 0, opacity: 0 }}
       >
-        <ul className="flex flex-col items-center gap-4 py-6">
-          {navItems.map((item, idx) => (
-            <li key={item}>
+        <ul className="px-4 py-4 space-y-2 w-64" role="menu">
+          {navItems.map((item) => (
+            <li key={item} role="menuitem">
               <a
-                href={`#${item.toLowerCase()}`}
-                ref={(r) => (mobileLinkRefs.current[idx] = r)}
+                href={`/${item.toLowerCase()}`}
+                className="block px-4 py-2 rounded-full transition-all duration-300
+                           hover:border hover:border-indigo-500
+                           hover:text-indigo-600
+                           focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 onClick={() => setIsOpen(false)}
-                className="relative px-3 py-2 text-gray-700 hover:text-indigo-700 transition-colors duration-300"
               >
                 {item}
-                <span className="underline absolute left-0 bottom-0 w-full h-0.5 bg-indigo-700 origin-left scale-x-0" />
               </a>
             </li>
           ))}
@@ -123,6 +101,4 @@ const BookNavbar = () => {
       </div>
     </nav>
   );
-};
-
-export default BookNavbar;
+}

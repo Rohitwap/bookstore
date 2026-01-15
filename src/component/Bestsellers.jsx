@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -129,13 +127,8 @@ const booksApi = [
 
 ];
 
-export default function WorldFamousBooksCarousel() {
+export default function WorldFamousBooksGrid() {
   const [books] = useState(booksApi);
-  const [emblaRef] = useEmblaCarousel(
-    { loop: true, align: "center" },
-    [Autoplay({ delay: 1800, stopOnInteraction: false })]
-  );
-
   const sectionRef = useRef(null);
   const cardRefs = useRef([]);
 
@@ -182,41 +175,38 @@ export default function WorldFamousBooksCarousel() {
         🌍 100 World Famous Best-Selling Books
       </h2>
 
-      <div ref={emblaRef} className="overflow-hidden px-6">
-        <div className="flex gap-8">
-          {books.map((book, index) => (
-            <div
-              key={book.id}
-              ref={(el) => (cardRefs.current[index] = el)}
-              className="flex-[0_0_85%] sm:flex-[0_0_45%] md:flex-[0_0_28%] lg:flex-[0_0_20%]"
-            >
-              <div className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-yellow-400/40 transition duration-500">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={book.image}
-                    alt={book.title}
-                    className="h-80 w-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <span className="absolute top-3 left-3 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
-                    {book.genre}
-                  </span>
-                </div>
+      {/* Responsive Grid Layout */}
+      <div className="px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        {books.map((book, index) => (
+          <div
+            key={book.id}
+            ref={(el) => (cardRefs.current[index] = el)}
+            className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-yellow-400/40 transition duration-500"
+          >
+            <div className="relative overflow-hidden">
+              <img
+                src={book.image}
+                alt={book.title}
+                className="h-80 w-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <span className="absolute top-3 left-3 bg-black/70 text-white text-xs px-3 py-1 rounded-full">
+                {book.genre}
+              </span>
+            </div>
 
-                <div className="p-5 text-center">
-                  <h3 className="text-lg font-bold text-gray-800 truncate">
-                    {book.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">{book.author}</p>
+            <div className="p-5 text-center">
+              <h3 className="text-lg font-bold text-gray-800 truncate">
+                {book.title}
+              </h3>
+              <p className="text-sm text-gray-500">{book.author}</p>
 
-                  <div className="flex justify-between items-center mt-4 text-sm">
-                    <span className="text-yellow-500 font-semibold">⭐ {book.rating}</span>
-                    <span className="font-bold text-green-600">₹{book.price}</span>
-                  </div>
-                </div>
+              <div className="flex justify-between items-center mt-4 text-sm">
+                <span className="text-yellow-500 font-semibold">⭐ {book.rating}</span>
+                <span className="font-bold text-green-600">₹{book.price}</span>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );
