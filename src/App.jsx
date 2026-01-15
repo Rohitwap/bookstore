@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router"
+import { HashRouter,Routes, Route } from "react-router"
 import Navbar from "./component/Navbar"
 import Home from "./component/Home"
 import Categories from "./component/Categories"
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <Router>
+      <HashRouter>
         <Navbar />
         <Routes>
           <Route path="/home" element={<Home />} />
@@ -24,7 +24,7 @@ function App() {
 
         </Routes>
         <Footer />
-      </Router>
+      </HashRouter>
     </>
   )
 }
