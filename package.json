@@ -1,5 +1,6 @@
 {
   "name": "bookstore",
+  "homepage": "https://github.com/Rohitwap/bookstore.git",
   "private": true,
   "version": "0.0.0",
   "type": "module",
