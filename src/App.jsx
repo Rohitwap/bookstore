@@ -1,4 +1,4 @@
-import { HashRouter,Routes, Route } from "react-router"
+import {Routes, Route } from "react-router"
 import Navbar from "./component/Navbar"
 import Home from "./component/Home"
 import Categories from "./component/Categories"
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <HashRouter>
+      
         <Navbar />
         <Routes>
           <Route path="/home" element={<Home />} />
@@ -24,8 +24,8 @@ function App() {
 
         </Routes>
         <Footer />
-      </HashRouter>
-    </>
+      </>
+    
   )
 }
 
